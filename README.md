@@ -66,7 +66,7 @@ Required Python packages:
 Run the program:
 
 ```bash
-python chemkinToOpenFOAM.py
+python chemkin2foam.py
 ```
 
 The program will ask for the input and output information interactively:
