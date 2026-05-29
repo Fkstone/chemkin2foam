@@ -381,9 +381,9 @@ reactions
         F
         {
             alpha           0.68;
-            Tsss            78;
-            Ts              1995;
-            Tss             5590;
+            Tsss           78;
+            Ts           1995;
+            Tss           5590;
         }
         thirdBodyEfficiencies
         {
@@ -434,9 +434,9 @@ reactions
         F
         {
             alpha           0.783;
-            Tsss            74;
-            Ts              2941;
-            Tss             6964;
+            Tsss           74;
+            Ts           2941;
+            Tss           6964;
         }
         thirdBodyEfficiencies
         {
@@ -495,9 +495,9 @@ reactions
         F
         {
             alpha           0.7824;
-            Tsss            271;
-            Ts              2755;
-            Tss             6570;
+            Tsss           271;
+            Ts           2755;
+            Tss           6570;
         }
         thirdBodyEfficiencies
         {
@@ -556,9 +556,9 @@ reactions
         F
         {
             alpha           0.758;
-            Tsss            94;
-            Ts              1555;
-            Tss             4200;
+            Tsss           94;
+            Ts           1555;
+            Tss           4200;
         }
         thirdBodyEfficiencies
         {
@@ -625,9 +625,9 @@ reactions
         F
         {
             alpha           0.9753;
-            Tsss            210;
-            Ts              984;
-            Tss             4374;
+            Tsss           210;
+            Ts           984;
+            Tss           4374;
         }
         thirdBodyEfficiencies
         {
@@ -678,9 +678,9 @@ reactions
         F
         {
             alpha           0.8422;
-            Tsss            125;
-            Ts              2219;
-            Tss             6882;
+            Tsss           125;
+            Ts           2219;
+            Tss           6882;
         }
         thirdBodyEfficiencies
         {
@@ -739,9 +739,9 @@ reactions
         F
         {
             alpha           0.932;
-            Tsss            197;
-            Ts              1540;
-            Tss             10300;
+            Tsss           197;
+            Ts           1540;
+            Tss           10300;
         }
         thirdBodyEfficiencies
         {
@@ -1056,9 +1056,9 @@ reactions
         F
         {
             alpha           0.5325;
-            Tsss            151;
-            Ts              1038;
-            Tss             4970;
+            Tsss           151;
+            Ts           1038;
+            Tss           4970;
         }
         thirdBodyEfficiencies
         {
