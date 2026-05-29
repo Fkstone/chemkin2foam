@@ -76,11 +76,11 @@ The program will ask for the input and output information interactively:
  Chemkin to OpenFOAM 8-13 Mechanism Converter
 ==============================================
 
-Chemkin input directory: ./DRM19
+Chemkin input directory: ./chemkin
 Chemkin mechanism file name: chem.inp
 Chemkin thermo file name: therm.dat
 Chemkin transport file name: tran.dat
-OpenFOAM output directory: ./chemkin
+OpenFOAM output directory: ./foam
 Use ck2yaml --permissive? [y/N]: y
 Pressure for PLOG reactions in atm, empty = keep PLOG format:
 Start conversion? [Y/n]:
@@ -89,7 +89,7 @@ Start conversion? [Y/n]:
 After successful conversion, the output directory will contain:
 
 ```text
-chemkin/
+foam/
 ├── chem.yaml
 ├── thermos
 ├── reactions
@@ -104,7 +104,7 @@ chemkin/
 The input directory should contain Chemkin-format mechanism files, for example:
 
 ```text
-DRM19/
+chemkin/
 ├── chem.inp
 ├── therm.dat
 └── tran.dat
