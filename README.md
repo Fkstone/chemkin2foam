@@ -61,35 +61,6 @@ Required Python packages:
 
 ---
 
-## Installation
-
-Create the Conda environment:
-
-```bash
-conda env create -f environment.yml
-```
-
-Activate the environment:
-
-```bash
-conda activate chemkin2foam
-```
-
-Example `environment.yml`:
-
-```yaml
-name: chemkin2foam
-channels:
-  - conda-forge
-dependencies:
-  - python=3.11
-  - cantera
-  - numpy
-  - scipy
-```
-
----
-
 ## Usage
 
 Run the program:
