@@ -18,9 +18,10 @@ thermos
 reactions
 elements
 transportProperties
+thermophysicalTransport   (optional, see Diffusion Models below)
 ```
 
-The program also computes pure-species dynamic viscosity data using Cantera and fits Sutherland transport parameters for each species.
+The program also computes pure-species dynamic viscosity data using Cantera and fits Sutherland transport parameters for each species. Optionally, it can also fit species diffusion coefficients from the mechanism's transport data and generate an OpenFOAM `thermophysicalTransport` dictionary for multicomponent diffusion.
 
 ---
 
@@ -46,6 +47,12 @@ The program also computes pure-species dynamic viscosity data using Cantera and 
   - Lindemann falloff reactions
   - pressure-dependent Arrhenius / PLOG reactions
 - Optional evaluation of PLOG reactions at a fixed pressure
+- Optional species diffusion model generation (`thermophysicalTransport`):
+  - No differential diffusion (unity Lewis number) — file generation skipped
+  - Simple: `FickianFourier` / `FickianEddyDiffusivity`, one mixture-averaged diffusion coefficient per species
+  - Full: `MaxwellStefanFourier`, complete binary diffusion coefficient matrix
+  - laminar, RAS, or LES simulation type
+- Target OpenFOAM major version selection (8–13), with automatic feature gating
 
 ---
 
@@ -81,10 +88,20 @@ Chemkin mechanism file name: chem.inp
 Chemkin thermo file name: therm.dat
 Chemkin transport file name: tran.dat
 OpenFOAM output directory: ./foam
-Use ck2yaml --permissive? [y/N]: y
 Pressure for PLOG reactions in atm, empty = keep PLOG format:
+Target OpenFOAM major version [8-13] (default 13): 13
+
+Species diffusion model for thermophysicalTransport:
+  1) None — unity Lewis number (no differential diffusion, skip this step)
+  2) Simple — FickianFourier, one mixture-averaged D per species
+  3) Full  — MaxwellStefanFourier, full binary D_ij matrix
+
+Select [1/2/3] (default 1): 3
+
 Start conversion? [Y/n]:
 ```
+
+If a diffusion model other than "None" is selected, a couple of follow-up questions appear — see [Diffusion Models](#diffusion-models) below.
 
 After successful conversion, the output directory will contain:
 
@@ -94,7 +111,8 @@ foam/
 ├── thermos
 ├── reactions
 ├── elements
-└── transportProperties
+├── transportProperties
+└── thermophysicalTransport   (only if a diffusion model was selected)
 ```
 
 ---
@@ -146,6 +164,10 @@ OpenFOAM element list file.
 
 OpenFOAM-style transport property file containing fitted Sutherland parameters for each species.
 
+### `thermophysicalTransport` (optional)
+
+OpenFOAM multicomponent diffusion dictionary, generated only if a diffusion model other than "None" is selected. See [Diffusion Models](#diffusion-models).
+
 ---
 
 ## PLOG Reactions
@@ -161,6 +183,47 @@ Pressure for PLOG reactions in atm, empty = keep PLOG format: 1.0
 ```
 
 the program evaluates the pressure-dependent reaction rate at the specified pressure and writes it as a standard Arrhenius reaction.
+
+---
+
+## Diffusion Models
+
+The program can optionally fit species diffusion coefficients from the mechanism's Chemkin transport data and generate an OpenFOAM `thermophysicalTransport` dictionary. Three options are offered:
+
+| Choice | OpenFOAM model                      | Diffusion coefficients                              |
+|--------|--------------------------------------|------------------------------------------------------|
+| 1) None   | — (file not generated)            | Unity Lewis number, no differential diffusion         |
+| 2) Simple | `FickianFourier` / `FickianEddyDiffusivity` | One mixture-averaged `D` per species (Wilke's rule) |
+| 3) Full   | `MaxwellStefanFourier`             | Complete binary `D_ij` matrix (`n·(n+1)/2` pairs)     |
+
+Coefficients are fitted as the 5-parameter log-polynomial required by OpenFOAM's `binaryDiffusionCoefficient` `Function2`:
+
+```text
+D(T) = T^1.5 * (c0 + c1·lnT + c2·lnT² + c3·lnT³ + c4·lnT⁴) / p
+```
+
+The fit temperature range and sample count are fixed constants at the top of the script (`DIFFUSION_FIT_T_MIN`, `DIFFUSION_FIT_T_MAX`, `DIFFUSION_FIT_N_POINTS` — default 300–3000 K, 60 points) rather than interactive prompts; edit them directly in the script if a mechanism needs a different range.
+
+### Simulation type (laminar / RAS / LES)
+
+- **Simple (Fickian)**: available for `laminar`, `RAS`, or `LES`. For RAS/LES, the program also asks for the turbulent Prandtl number `Prt` (default 0.85) and turbulent Schmidt number `Sct` (default 0.7), and writes `FickianEddyDiffusivity` instead of `FickianFourier`.
+- **Full (Maxwell-Stefan)**: `MaxwellStefanFourier` is **laminar-only** in OpenFOAM — there is no RAS/LES counterpart, so the program does not ask for a simulation type in this case; it always writes a laminar dictionary.
+
+### Reference composition (Simple/Fickian only)
+
+Cantera's mixture-averaged diffusion coefficients depend on the mole fractions of every other species, while OpenFOAM's `Dm` entries are fit as functions of (p, T) only. The program asks for a reference composition to evaluate that dependence:
+
+```text
+Reference composition for the mixture-averaged coefficients:
+  1) Equimolar mixture of all species (default)
+  2) Custom mole fractions, e.g. 'CH4:1,O2:2,N2:7.52'
+```
+
+If your case runs far from the reference composition (e.g. strongly non-premixed), consider option 2 with a composition closer to your conditions, or use the Full (Maxwell-Stefan) model instead, which is composition-independent.
+
+### OpenFOAM version compatibility
+
+`FickianFourier`, `FickianEddyDiffusivity`, and `MaxwellStefanFourier` were all introduced in **OpenFOAM 9**; they do not exist in OpenFOAM 8. If the target OpenFOAM version is set below 9 and a diffusion model other than "None" is selected, the program prints a warning and automatically disables diffusion generation for that run.
 
 ---
 
@@ -198,6 +261,11 @@ Other reaction types, such as Chebyshev or non-standard custom reaction models, 
 
 If an unsupported reaction type is detected, the program will print a warning and skip that reaction.
 
+For diffusion coefficient generation, note that:
+
+- `MaxwellStefanFourier` has no turbulent (RAS/LES) counterpart in OpenFOAM.
+- The mixture-averaged coefficients used by the Simple (Fickian) model depend on a fixed reference composition, which is only an approximation if the actual simulation composition varies significantly.
+
 ---
 
 ## Acknowledgement
@@ -217,6 +285,7 @@ This project extends the workflow by adding:
 - automatic `ck2yaml` conversion
 - interactive command-line input
 - automatic Sutherland transport fitting using Cantera viscosity data
+- optional multicomponent diffusion coefficient fitting and `thermophysicalTransport` generation (Fickian / Maxwell-Stefan, laminar/RAS/LES)
 
 ---
 

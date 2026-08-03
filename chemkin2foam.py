@@ -2,6 +2,7 @@ import os
 import re
 import math
 import shutil
+import itertools
 import subprocess
 
 import cantera as ct
@@ -10,6 +11,11 @@ from scipy.optimize import curve_fit
 
 R_CAL = 1.987
 fmt = lambda v: f"{v:.9g}"
+
+# Diffusion-coefficient fit range/resolution — see README (not user-configurable)
+DIFFUSION_FIT_T_MIN = 300.0
+DIFFUSION_FIT_T_MAX = 3000.0
+DIFFUSION_FIT_N_POINTS = 60
 
 
 # ── User input ────────────────────────────────────────────────────────────────
@@ -33,15 +39,77 @@ def ask_user_settings():
 
     ck_input_dir, ck_mech_file, ck_thermo_file, ck_transport_file, output_dir = vals
 
-    permissive = input("Use ck2yaml --permissive? [y/N]: ").strip().lower() in ("y", "yes")
+    permissive = False
     p_str = input("Pressure for PLOG reactions in atm, empty = keep PLOG format: ").strip()
     pressure_atm = float(p_str) if p_str else None
 
+    of_ver_str = input("Target OpenFOAM major version [8-13] (default 13): ").strip()
+    of_version = int(of_ver_str) if of_ver_str else 13
+
+    # ── Diffusion model selection ───────────────────────────────────────────────
+    print(
+        "\nSpecies diffusion model for thermophysicalTransport:\n"
+        "  1) None — unity Lewis number (no differential diffusion, skip this step)\n"
+        "  2) Simple — FickianFourier, one mixture-averaged D per species\n"
+        "  3) Full  — MaxwellStefanFourier, full binary D_ij matrix\n"
+    )
+    choice = input("Select [1/2/3] (default 1): ").strip() or "1"
+    diffusion_model = {"1": "none", "2": "fickian", "3": "maxwell_stefan"}.get(choice, "none")
+
+    if diffusion_model in ("fickian", "maxwell_stefan") and of_version < 9:
+        print(
+            f"\nWarning: FickianFourier/MaxwellStefanFourier require OpenFOAM >= 9 "
+            f"(target is {of_version}). Disabling diffusion generation."
+        )
+        diffusion_model = "none"
+
+    diffusion_settings = {}
+    if diffusion_model == "maxwell_stefan":
+        # MaxwellStefanFourier is laminar-only in OpenFOAM — no RAS/LES variant exists,
+        # so there's nothing to ask.
+        diffusion_settings = dict(
+            sim_type="laminar",
+            T_min=DIFFUSION_FIT_T_MIN,
+            T_max=DIFFUSION_FIT_T_MAX,
+            n_points=DIFFUSION_FIT_N_POINTS,
+        )
+
+    elif diffusion_model == "fickian":
+        sim_str = input(
+            "  Simulation type for thermophysicalTransport [laminar/RAS/LES] "
+            "(default laminar): "
+        ).strip().lower() or "laminar"
+        sim_type = {"laminar": "laminar", "ras": "RAS", "les": "LES"}.get(sim_str, "laminar")
+
+        print(
+            "  Reference composition for the mixture-averaged coefficients:\n"
+            "    1) Equimolar mixture of all species (default)\n"
+            "    2) Custom mole fractions, e.g. 'CH4:1,O2:2,N2:7.52'"
+        )
+        ref_choice = input("  Select [1/2] (default 1): ").strip() or "1"
+        ref_composition = None
+        if ref_choice == "2":
+            ref_composition = input("  Enter mole fractions: ").strip() or None
+
+        diffusion_settings = dict(
+            sim_type=sim_type,
+            ref_composition=ref_composition,
+            T_min=DIFFUSION_FIT_T_MIN,
+            T_max=DIFFUSION_FIT_T_MAX,
+            n_points=DIFFUSION_FIT_N_POINTS,
+        )
+        if sim_type != "laminar":
+            prt_str = input("  Turbulent Prandtl number Prt (default 0.85): ").strip()
+            sct_str = input("  Turbulent Schmidt number Sct (default 0.7): ").strip()
+            diffusion_settings["Prt"] = float(prt_str) if prt_str else 0.85
+            diffusion_settings["Sct"] = float(sct_str) if sct_str else 0.7
+
     print(f"\nInput summary:")
     for k, v in zip(
-        ["Chemkin dir", "Mech", "Thermo", "Transport", "Output", "Permissive", "PLOG pressure"],
+        ["Chemkin dir", "Mech", "Thermo", "Transport", "Output", "Permissive", "PLOG pressure",
+         "OF version", "Diffusion model"],
         [ck_input_dir, ck_mech_file, ck_thermo_file, ck_transport_file,
-         output_dir, permissive, pressure_atm]
+         output_dir, permissive, pressure_atm, of_version, diffusion_model]
     ):
         print(f"  {k:<20}: {v}")
 
@@ -49,7 +117,8 @@ def ask_user_settings():
         print("Conversion cancelled.")
         exit(0)
 
-    return ck_input_dir, ck_mech_file, ck_thermo_file, ck_transport_file, output_dir, permissive, pressure_atm
+    return (ck_input_dir, ck_mech_file, ck_thermo_file, ck_transport_file, output_dir,
+            permissive, pressure_atm, of_version, diffusion_model, diffusion_settings)
 
 
 # ── Chemkin → Cantera YAML ────────────────────────────────────────────────────
@@ -66,9 +135,10 @@ def chemkin_to_yaml(ck_mech, ck_thermo, ck_transport, yaml_path, permissive=Fals
         raise FileNotFoundError(f"ck2yaml failed to generate: {yaml_path}")
 
 
-# ── Sutherland transport fitting ──────────────────────────────────────────────
+# ── FoamFile header (parameterised by `object` name) ──────────────────────────
 
-_FOAM_HEADER = '''\
+def _foam_header(object_name):
+    return f'''\
 /*--------------------------------*- C++ -*----------------------------------*\\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
@@ -77,15 +147,21 @@ _FOAM_HEADER = '''\
      \\/     M anipulation  |
 \\*---------------------------------------------------------------------------*/
 FoamFile
-{
+{{
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "chemkin";
-    object      transportProperties;
-}
+    location    "constant";
+    object      {object_name};
+}}
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 '''
+
+
+_FOAM_HEADER = _foam_header("transportProperties")
+
+
+# ── Sutherland transport fitting ──────────────────────────────────────────────
 
 def _sutherland(T, As, Ts):
     return As * T ** 1.5 / (Ts + T)
@@ -121,6 +197,176 @@ def generate_transport_from_cantera(gas, output_dir=None):
             f.write("\n".join(texts) + "\n")
 
     return DEFAULT, table
+
+
+# ── Diffusion coefficient fitting (MaxwellStefanFourier / FickianFourier) ─────
+
+POLY_DEGREE = 4  # binaryDiffusionCoefficient == Polynomial<5>, do not change
+
+
+def _fit_D_polynomial(D_vals, T_array, p_ref):
+    # D(T) = T^1.5*(c0+c1*lnT+...+c4*lnT^4)/p
+    lnT = np.log(T_array)
+    y = D_vals * p_ref / (T_array ** 1.5)
+    coeffs_high_to_low = np.polyfit(lnT, y, POLY_DEGREE)
+    coeffs = coeffs_high_to_low[::-1]
+    y_fit = np.polyval(coeffs_high_to_low, lnT)
+    D_fit = y_fit * (T_array ** 1.5) / p_ref
+    rel_err = np.abs(D_fit - D_vals) / np.maximum(D_vals, 1e-30)
+    return coeffs, rel_err.max()
+
+
+def _sample_D_over_T(T_min, T_max, n_points, getter):
+    # getter(T) -> D array at that temperature; stacks into one (n_points, ...) array
+    T_array = np.linspace(T_min, T_max, n_points)
+    return T_array, np.array([getter(T) for T in T_array])
+
+
+def fit_binary_diffusion_polynomials(gas, T_min=300.0, T_max=3000.0, n_points=60,
+                                      p_ref=None):
+    # {(sp_i, sp_j): [c0..c4]} for all i<=j, incl. self-diffusion (composition-independent)
+    p_ref = p_ref or ct.one_atm
+    T0, P0, X0 = gas.T, gas.P, gas.X.copy()
+    gas.transport_model = "mixture-averaged"
+    species_names = gas.species_names
+
+    def getter(T):
+        gas.TP = T, p_ref
+        return gas.binary_diff_coeffs  # [m^2/s], composition-independent
+
+    T_array, D_matrices = _sample_D_over_T(T_min, T_max, n_points, getter)
+
+    pair_coeffs, max_rel_err_dict = {}, {}
+    for i, j in itertools.combinations_with_replacement(range(len(species_names)), 2):
+        coeffs, max_err = _fit_D_polynomial(D_matrices[:, i, j], T_array, p_ref)
+        key = (species_names[i], species_names[j])
+        pair_coeffs[key], max_rel_err_dict[key] = coeffs, max_err
+
+    gas.TPX = T0, P0, X0  # restore state for downstream thermo/reaction writers
+    return pair_coeffs, max_rel_err_dict
+
+
+def fit_mixture_diffusion_polynomials(gas, T_min=300.0, T_max=3000.0, n_points=60,
+                                       p_ref=None, ref_composition=None):
+    # {sp: [c0..c4]}, one mixture-averaged D per species (Wilke rule, depends on ref_composition)
+    p_ref = p_ref or ct.one_atm
+    T0, P0, X0 = gas.T, gas.P, gas.X.copy()
+    gas.transport_model = "mixture-averaged"
+    species_names = gas.species_names
+    gas.X = ref_composition or {sp: 1.0 for sp in species_names}  # equimolar default
+
+    def getter(T):
+        gas.TP = T, p_ref
+        return gas.mix_diff_coeffs  # [m^2/s], depends on the composition set above
+
+    T_array, D_matrix = _sample_D_over_T(T_min, T_max, n_points, getter)
+
+    species_coeffs, max_rel_err_dict = {}, {}
+    for i, sp in enumerate(species_names):
+        coeffs, max_err = _fit_D_polynomial(D_matrix[:, i], T_array, p_ref)
+        species_coeffs[sp], max_rel_err_dict[sp] = coeffs, max_err
+
+    gas.TPX = T0, P0, X0
+    return species_coeffs, max_rel_err_dict
+
+
+def _print_fit_errors(err_dict, label):
+    worst = sorted(err_dict.items(), key=lambda kv: -kv[1])[:5]
+    print(f"\nWorst-fit {label}:")
+    for key, err in worst:
+        key_str = "-".join(key) if isinstance(key, tuple) else key
+        print(f"  {key_str}: {err*100:.4f}%")
+    errs = np.array(list(err_dict.values()))
+    print(f"Max relative error: {errs.max()*100:.4f}%")
+    print(f"Mean relative error: {errs.mean()*100:.4f}%")
+
+
+def _diffusion_dict_text(model, T_min, T_max, p_ref, n_species, entry_coeffs,
+                          mixture_averaged=False, implicit_heat_flux=None,
+                          sim_type="laminar", Prt=None, Sct=None):
+    # entry_coeffs: {key: [c0..c4]}, key is "spA-spB" (D) or "sp" (Dm)
+    fickian_like = model in ("FickianFourier", "FickianEddyDiffusivity")
+    lines = [_foam_header("thermophysicalTransport")]
+    lines.append(f"// {n_species} species, {len(entry_coeffs)} entries, fit {T_min:.0f}-{T_max:.0f} K")
+    lines.append("")
+    lines.append(f"simulationType {sim_type};")
+    lines.append("")
+    lines.append(sim_type)
+    lines.append("{")
+    lines.append(f"    model  {model};")
+    if fickian_like:
+        lines.append(f"    mixtureDiffusionCoefficients {'yes' if mixture_averaged else 'no'};")
+    if sim_type != "laminar":
+        lines.append(f"    Prt {fmt(Prt)};")
+        lines.append(f"    Sct {fmt(Sct)};")
+    if implicit_heat_flux is not None:
+        val = "true" if implicit_heat_flux else "false"
+        lines.append(f"    implicitHeatFlux {val};")
+    lines.append("")
+    lines.append("    Dm" if (fickian_like and mixture_averaged) else "    D")
+    lines.append("    {")
+    for key, c in entry_coeffs.items():
+        coeffs_str = " ".join(f"{v:.8e}" for v in c)
+        lines.append(f"        {key}")
+        lines.append("        {")
+        lines.append("            type   binaryDiffusionCoefficient;")
+        lines.append(f"            coeffs ({coeffs_str});")
+        lines.append("        }")
+    lines.append("    }")
+    lines.append("}")
+    lines.append("")
+    lines.append("// ************************************************************************* //")
+    return "\n".join(lines)
+
+
+def generate_maxwellstefan_transport(gas, output_dir, T_min=300.0, T_max=3000.0,
+                                      n_points=60, implicit_heat_flux=None,
+                                      sim_type="laminar", Prt=0.85, Sct=0.7):
+    p_ref = ct.one_atm
+    pair_coeffs, max_rel_err_dict = fit_binary_diffusion_polynomials(
+        gas, T_min=T_min, T_max=T_max, n_points=n_points, p_ref=p_ref
+    )
+    _print_fit_errors(max_rel_err_dict, "binary diffusion pairs")
+
+    # MaxwellStefanFourier is laminar-only; no RAS/LES counterpart exists, so
+    # turbulent cases fall back to FickianEddyDiffusivity reusing the same
+    # binary D_ij coefficients (mixtureDiffusionCoefficients no).
+    model = "MaxwellStefanFourier" if sim_type == "laminar" else "FickianEddyDiffusivity"
+
+    entry_coeffs = {f"{a}-{b}": c for (a, b), c in pair_coeffs.items()}
+    text = _diffusion_dict_text(
+        model, T_min, T_max, p_ref, gas.n_species, entry_coeffs,
+        mixture_averaged=False, implicit_heat_flux=implicit_heat_flux,
+        sim_type=sim_type, Prt=Prt, Sct=Sct,
+    )
+    out_path = os.path.join(output_dir, "thermophysicalTransport")
+    with open(out_path, "w") as f:
+        f.write(text)
+    print(f"Wrote: {out_path}")
+
+
+def generate_fickian_transport(gas, output_dir, T_min=300.0, T_max=3000.0,
+                                n_points=60, ref_composition=None,
+                                implicit_heat_flux=None,
+                                sim_type="laminar", Prt=0.85, Sct=0.7):
+    species_coeffs, max_rel_err_dict = fit_mixture_diffusion_polynomials(
+        gas, T_min=T_min, T_max=T_max, n_points=n_points,
+        ref_composition=ref_composition,
+    )
+    _print_fit_errors(max_rel_err_dict, "mixture-averaged diffusion species")
+    if not ref_composition:
+        print("Note: used an equimolar reference composition.")
+
+    model = "FickianFourier" if sim_type == "laminar" else "FickianEddyDiffusivity"
+    text = _diffusion_dict_text(
+        model, T_min, T_max, ct.one_atm, gas.n_species, species_coeffs,
+        mixture_averaged=True, implicit_heat_flux=implicit_heat_flux,
+        sim_type=sim_type, Prt=Prt, Sct=Sct,
+    )
+    out_path = os.path.join(output_dir, "thermophysicalTransport")
+    with open(out_path, "w") as f:
+        f.write(text)
+    print(f"Wrote: {out_path}")
 
 
 # ── Thermo / species block ────────────────────────────────────────────────────
@@ -169,8 +415,8 @@ def writeThermo(gas, default_tp, table_tp, output_dir, species_names, header_lin
 
 
 def writeReactions(gas, species_names, output_dir, pressure_atm=None,
-                   header_lines=None, elements_lines=None,
-                   rtype_suffix="", thirdBodyCase="T"):
+                    header_lines=None, elements_lines=None,
+                    rtype_suffix="", thirdBodyCase="T"):
     lines = list(header_lines or [])
     if elements_lines:
         lines += elements_lines + [""]
@@ -380,7 +626,10 @@ def combined_reaction_block(forward, reverse, index, species_names, rtype_suffix
 
 def convert_from_chemkin_to_openfoam(ck_input_dir, ck_mech_file, ck_thermo_file,
                                       ck_transport_file, output_dir,
-                                      permissive=False, pressure_atm=None):
+                                      permissive=False, pressure_atm=None,
+                                      of_version=13,
+                                      diffusion_model="none",
+                                      diffusion_settings=None):
     os.makedirs(output_dir, exist_ok=True)
 
     ck_mech      = os.path.join(ck_input_dir, ck_mech_file)
@@ -406,6 +655,21 @@ def convert_from_chemkin_to_openfoam(ck_input_dir, ck_mech_file, ck_thermo_file,
         f.write("\n".join(["elements", str(len(elem_names)), "("] + elem_names + [")", ";"]) + "\n")
 
     writeReactions(gas, species_names, output_dir, pressure_atm)
+
+    # ── Diffusion transport ──────────────────────────────────────────────────────
+    settings = diffusion_settings or {}
+    if diffusion_model in ("maxwell_stefan", "fickian") and of_version < 9:
+        print(f"\nWarning: {diffusion_model} needs OpenFOAM >= 9 (target {of_version}). Skipping.")
+        diffusion_model = "none"
+
+    if diffusion_model == "maxwell_stefan":
+        print("\nGenerating MaxwellStefanFourier binary diffusion coefficients...\n")
+        generate_maxwellstefan_transport(gas, output_dir, **settings)
+    elif diffusion_model == "fickian":
+        print("\nGenerating FickianFourier mixture-averaged diffusion coefficients...\n")
+        generate_fickian_transport(gas, output_dir, **settings)
+    else:
+        print("\nDiffusion model: none (unity Lewis) — skipping thermophysicalTransport.")
 
     print(f"\nConversion finished. Output: {output_dir}")
 

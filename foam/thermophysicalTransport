@@ -1,0 +1,1186 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \    /   O peration     | Website:  https://openfoam.org
+    \  /    A nd           | Version:  13
+     \/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      thermophysicalTransport;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// 21 species, 231 entries, fit 300-3000 K
+
+simulationType laminar;
+
+laminar
+{
+    model  MaxwellStefanFourier;
+
+    D
+    {
+        H2-H2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-7.21875541e-03 4.74027262e-03 -9.13003819e-04 8.46482801e-05 -2.81247635e-06);
+        }
+        H2-H
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-2.50162453e-02 1.39870058e-02 -2.61023081e-03 2.26097395e-04 -7.16423557e-06);
+        }
+        H2-O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-9.65147826e-03 5.71246016e-03 -1.09656624e-03 9.84367103e-05 -3.22064414e-06);
+        }
+        H2-O2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-8.35046159e-03 4.80302405e-03 -9.12112947e-04 8.06225575e-05 -2.60456249e-06);
+        }
+        H2-OH
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-9.61941742e-03 5.69348418e-03 -1.09292360e-03 9.81097176e-05 -3.20994562e-06);
+        }
+        H2-H2O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-7.96697623e-03 2.97450484e-03 -2.35174152e-04 -3.66864067e-06 9.44695851e-07);
+        }
+        H2-HO2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-8.34290062e-03 4.79867512e-03 -9.11287069e-04 8.05495574e-05 -2.60220418e-06);
+        }
+        H2-CH2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-8.44773831e-03 4.72661621e-03 -8.82682287e-04 7.65105536e-05 -2.42617458e-06);
+        }
+        H2-CH2(S)
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-8.44773831e-03 4.72661621e-03 -8.82682287e-04 7.65105536e-05 -2.42617458e-06);
+        }
+        H2-CH3
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-8.41207759e-03 4.70666358e-03 -8.78956191e-04 7.61875770e-05 -2.41593289e-06);
+        }
+        H2-CH4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-8.51770718e-03 4.77478931e-03 -8.93376096e-04 7.75838768e-05 -2.46529846e-06);
+        }
+        H2-CO
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-7.55238237e-03 4.38253646e-03 -8.34291029e-04 7.40579535e-05 -2.40003265e-06);
+        }
+        H2-CO2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-9.23438038e-03 4.91669133e-03 -8.86423264e-04 7.38384521e-05 -2.24981886e-06);
+        }
+        H2-HCO
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-9.19980357e-03 4.43960925e-03 -7.09391715e-04 5.17005190e-05 -1.32133753e-06);
+        }
+        H2-CH2O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-9.18976663e-03 4.43476565e-03 -7.08617772e-04 5.16441140e-05 -1.31989596e-06);
+        }
+        H2-CH3O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-9.35001723e-03 4.59176238e-03 -7.54375851e-04 5.68084794e-05 -1.52616509e-06);
+        }
+        H2-C2H4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-9.05709496e-03 4.76344528e-03 -8.51163791e-04 7.02045354e-05 -2.11826808e-06);
+        }
+        H2-C2H5
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-8.01754109e-03 4.25456906e-03 -7.64676820e-04 6.34913596e-05 -1.92777164e-06);
+        }
+        H2-C2H6
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-8.00881917e-03 4.24994070e-03 -7.63844963e-04 6.34222902e-05 -1.92567450e-06);
+        }
+        H2-N2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-7.59769789e-03 4.41140879e-03 -8.39931332e-04 7.45800756e-05 -2.41748162e-06);
+        }
+        H2-AR
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-9.34828227e-03 5.25910385e-03 -9.87327245e-04 8.60344432e-05 -2.74381132e-06);
+        }
+        H-H
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-4.05995943e-02 1.88740528e-02 -2.81762354e-03 1.87959120e-04 -4.08971379e-06);
+        }
+        H-O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-2.64601309e-02 1.37960208e-02 -2.44482561e-03 1.99897138e-04 -5.97357847e-06);
+        }
+        H-O2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.90955383e-02 9.57101544e-03 -1.61679172e-03 1.25645789e-04 -3.52524265e-06);
+        }
+        H-OH
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-2.64136141e-02 1.37717674e-02 -2.44052762e-03 1.99545720e-04 -5.96307695e-06);
+        }
+        H-H2O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (4.00216959e-02 -2.68954021e-02 6.56337157e-03 -6.68113958e-04 2.48984013e-05);
+        }
+        H-HO2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.90866311e-02 9.56655102e-03 -1.61603756e-03 1.25587181e-04 -3.52359829e-06);
+        }
+        H-CH2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.47269172e-02 6.86806386e-03 -1.03169198e-03 6.94207526e-05 -1.53742882e-06);
+        }
+        H-CH2(S)
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.47269172e-02 6.86806386e-03 -1.03169198e-03 6.94207526e-05 -1.53742882e-06);
+        }
+        H-CH3
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.46937823e-02 6.85261105e-03 -1.02937072e-03 6.92645593e-05 -1.53396968e-06);
+        }
+        H-CH4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.52584739e-02 7.17155335e-03 -1.09343215e-03 7.50813287e-05 -1.72998883e-06);
+        }
+        H-CO
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.82272344e-02 9.26872490e-03 -1.59586561e-03 1.26616636e-04 -3.64985292e-06);
+        }
+        H-CO2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-5.04310968e-03 7.98517718e-04 3.31833339e-04 -6.37330807e-05 3.24956222e-06);
+        }
+        H-HCO
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (2.04453173e-02 -1.43836247e-02 3.63588278e-03 -3.77513234e-04 1.42832826e-05);
+        }
+        H-CH2O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (2.04337930e-02 -1.43755172e-02 3.63383337e-03 -3.77300444e-04 1.42752316e-05);
+        }
+        H-CH3O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (1.21559354e-02 -9.48782578e-03 2.57483938e-03 -2.77208716e-04 1.07683768e-05);
+        }
+        H-C2H4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.62742738e-03 -1.13474568e-03 7.24724126e-04 -9.93229421e-05 4.44373843e-06);
+        }
+        H-C2H5
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.59016354e-03 2.71301245e-04 3.68002051e-04 -6.21848377e-05 3.03855539e-06);
+        }
+        H-C2H6
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.58814582e-03 2.71148770e-04 3.67795229e-04 -6.21498890e-05 3.03684768e-06);
+        }
+        H-N2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.84770964e-02 9.40674523e-03 -1.62246682e-03 1.28962118e-04 -3.72638350e-06);
+        }
+        H-AR
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.79859866e-02 8.56105195e-03 -1.33572615e-03 9.45177637e-05 -2.29979342e-06);
+        }
+        O-O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-6.19190658e-03 3.41372452e-03 -6.31675339e-04 5.41630943e-05 -1.69965401e-06);
+        }
+        O-O2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-4.50908380e-03 2.41913684e-03 -4.39104858e-04 3.68411887e-05 -1.13124857e-06);
+        }
+        O-OH
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-6.09946846e-03 3.36276149e-03 -6.22245144e-04 5.33545009e-05 -1.67428011e-06);
+        }
+        O-H2O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (7.24909845e-04 -1.33561820e-03 4.95212217e-04 -6.01137451e-05 2.52162859e-06);
+        }
+        O-HO2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-4.48607393e-03 2.40679197e-03 -4.36864104e-04 3.66531880e-05 -1.12547580e-06);
+        }
+        O-CH2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-5.05889644e-03 2.63952303e-03 -4.68072667e-04 3.82983994e-05 -1.14537832e-06);
+        }
+        O-CH2(S)
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-5.05889644e-03 2.63952303e-03 -4.68072667e-04 3.82983994e-05 -1.14537832e-06);
+        }
+        O-CH3
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-4.96771428e-03 2.59194795e-03 -4.59636069e-04 3.76081045e-05 -1.12473388e-06);
+        }
+        O-CH4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-4.96472150e-03 2.59544835e-03 -4.61157875e-04 3.78096795e-05 -1.13335215e-06);
+        }
+        O-CO
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-4.24320227e-03 2.29537371e-03 -4.19006436e-04 3.53841927e-05 -1.09352050e-06);
+        }
+        O-CO2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.59501040e-03 1.71885194e-03 -2.70309102e-04 1.93187106e-05 -4.78132455e-07);
+        }
+        O-HCO
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-5.82009004e-04 -2.35123086e-04 1.83471099e-04 -2.58700669e-05 1.17330067e-06);
+        }
+        O-CH2O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-5.78526591e-04 -2.33716242e-04 1.82373312e-04 -2.57152750e-05 1.16628030e-06);
+        }
+        O-CH3O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.62594404e-03 4.24483727e-04 3.27757119e-05 -1.10664740e-05 6.38198261e-07);
+        }
+        O-C2H4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.06205251e-03 1.37401168e-03 -1.90511859e-04 1.13442557e-05 -1.85375451e-07);
+        }
+        O-C2H5
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.17594102e-03 1.50176920e-03 -2.31556616e-04 1.61378678e-05 -3.82223665e-07);
+        }
+        O-C2H6
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.15698446e-03 1.49280544e-03 -2.30174501e-04 1.60415441e-05 -3.79942248e-07);
+        }
+        O-N2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-4.27423848e-03 2.31331383e-03 -4.22402418e-04 3.56833163e-05 -1.10311616e-06);
+        }
+        O-AR
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-4.73855749e-03 2.48664315e-03 -4.43504199e-04 3.65066336e-05 -1.09915843e-06);
+        }
+        O2-O2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.10171261e-03 1.61813267e-03 -2.86911082e-04 2.34723895e-05 -7.01879144e-07);
+        }
+        O2-OH
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-4.41910194e-03 2.37086130e-03 -4.30342219e-04 3.61059976e-05 -1.10867373e-06);
+        }
+        O2-H2O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (5.85939382e-03 -4.04247876e-03 1.00698295e-03 -1.03719523e-04 3.90061409e-06);
+        }
+        O2-HO2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.07794001e-03 1.60573074e-03 -2.84712096e-04 2.32924890e-05 -6.96499699e-07);
+        }
+        O2-CH2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.48436978e-03 1.74823440e-03 -2.95709136e-04 2.30139417e-05 -6.46938031e-07);
+        }
+        O2-CH2(S)
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.48436978e-03 1.74823440e-03 -2.95709136e-04 2.30139417e-05 -6.46938031e-07);
+        }
+        O2-CH3
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.40219625e-03 1.70700497e-03 -2.88735289e-04 2.24711931e-05 -6.31680989e-07);
+        }
+        O2-CH4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.38800586e-03 1.70461334e-03 -2.89357612e-04 2.26083643e-05 -6.38823645e-07);
+        }
+        O2-CO
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.01260687e-03 1.58625872e-03 -2.83687760e-04 2.34212329e-05 -7.07371423e-07);
+        }
+        O2-CO2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.70075653e-03 7.06032864e-04 -8.13923484e-05 3.19986749e-06 2.98630419e-08);
+        }
+        O2-HCO
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (1.16617186e-03 -1.08120008e-03 3.22565650e-04 -3.62169268e-05 1.44739482e-06);
+        }
+        O2-CH2O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (1.15586090e-03 -1.07164042e-03 3.19713617e-04 -3.58967072e-05 1.43459738e-06);
+        }
+        O2-CH3O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (5.73619498e-04 -7.15532693e-04 2.40226816e-04 -2.82202435e-05 1.16074965e-06);
+        }
+        O2-C2H4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.39097454e-03 4.92194001e-04 -2.91497258e-05 -2.15855387e-06 2.30309052e-07);
+        }
+        O2-C2H5
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.55588112e-03 6.30325901e-04 -6.77159964e-05 2.06997195e-06 6.41220681e-08);
+        }
+        O2-C2H6
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.54215463e-03 6.24764960e-04 -6.71185837e-05 2.05170998e-06 6.35563622e-08);
+        }
+        O2-N2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.03076729e-03 1.59650355e-03 -2.85570301e-04 2.35821777e-05 -7.12353666e-07);
+        }
+        O2-AR
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-2.97636327e-03 1.50561829e-03 -2.57355405e-04 2.02612522e-05 -5.78182538e-07);
+        }
+        OH-OH
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-6.00560769e-03 3.31101414e-03 -6.12669817e-04 5.25334630e-05 -1.64851570e-06);
+        }
+        OH-H2O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (7.13441190e-04 -1.31448765e-03 4.87377562e-04 -5.91626975e-05 2.48173440e-06);
+        }
+        OH-HO2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-4.39562106e-03 2.35826374e-03 -4.28055598e-04 3.59141485e-05 -1.10278279e-06);
+        }
+        OH-CH2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-4.98836807e-03 2.60272424e-03 -4.61547053e-04 3.77644640e-05 -1.12941008e-06);
+        }
+        OH-CH2(S)
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-4.98836807e-03 2.60272424e-03 -4.61547053e-04 3.77644640e-05 -1.12941008e-06);
+        }
+        OH-CH3
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-4.89587254e-03 2.55446390e-03 -4.52988936e-04 3.70642262e-05 -1.10846828e-06);
+        }
+        OH-CH4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-4.89050130e-03 2.55664765e-03 -4.54263786e-04 3.72444430e-05 -1.11640908e-06);
+        }
+        OH-CO
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-4.16240009e-03 2.25166351e-03 -4.11027407e-04 3.47103809e-05 -1.07269688e-06);
+        }
+        OH-CO2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.51600922e-03 1.68107977e-03 -2.64368997e-04 1.88941775e-05 -4.67625384e-07);
+        }
+        OH-HCO
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-5.70782818e-04 -2.30587871e-04 1.79932184e-04 -2.53710674e-05 1.15066925e-06);
+        }
+        OH-CH2O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-5.67231488e-04 -2.29153186e-04 1.78812671e-04 -2.52132122e-05 1.14350995e-06);
+        }
+        OH-CH3O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.59383308e-03 4.16100548e-04 3.21284205e-05 -1.08479209e-05 6.25594409e-07);
+        }
+        OH-C2H4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.00370906e-03 1.34783166e-03 -1.86881902e-04 1.11281057e-05 -1.81843362e-07);
+        }
+        OH-C2H5
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.11464800e-03 1.47278631e-03 -2.27087766e-04 1.58264204e-05 -3.74847066e-07);
+        }
+        OH-C2H6
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.09531608e-03 1.46364505e-03 -2.25678284e-04 1.57281893e-05 -3.72520475e-07);
+        }
+        OH-N2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-4.19284102e-03 2.26925969e-03 -4.14358299e-04 3.50037728e-05 -1.08210871e-06);
+        }
+        OH-AR
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-4.63720297e-03 2.43345555e-03 -4.34017947e-04 3.57257817e-05 -1.07564818e-06);
+        }
+        H2O-H2O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (5.11290289e-03 -2.11574768e-03 2.28282705e-04 6.28579380e-06 -1.21090209e-06);
+        }
+        H2O-HO2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (3.33603187e-03 -2.56763417e-03 6.90657215e-04 -7.40388864e-05 2.86742013e-06);
+        }
+        H2O-CH2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (7.26858088e-03 -4.89341763e-03 1.19587140e-03 -1.21835738e-04 4.54342043e-06);
+        }
+        H2O-CH2(S)
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (7.26858088e-03 -4.89341763e-03 1.19587140e-03 -1.21835738e-04 4.54342043e-06);
+        }
+        H2O-CH3
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (7.13027424e-03 -4.80030562e-03 1.17311634e-03 -1.19517446e-04 4.45696817e-06);
+        }
+        H2O-CH4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (1.02270842e-02 -6.56921223e-03 1.54456900e-03 -1.53705894e-04 5.62560789e-06);
+        }
+        H2O-CO
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (4.77966368e-03 -3.39677618e-03 8.65015955e-04 -9.01706873e-05 3.42167913e-06);
+        }
+        H2O-CO2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (1.27100167e-02 -7.72277825e-03 1.72708664e-03 -1.65753957e-04 5.87834030e-06);
+        }
+        H2O-HCO
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (1.65075497e-02 -9.63692199e-03 2.07122070e-03 -1.91662836e-04 6.56137095e-06);
+        }
+        H2O-CH2O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (1.64010741e-02 -9.57476272e-03 2.05786109e-03 -1.90426588e-04 6.51904935e-06);
+        }
+        H2O-CH3O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (1.26414454e-02 -7.24868765e-03 1.52313539e-03 -1.36635013e-04 4.51890338e-06);
+        }
+        H2O-C2H4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (1.23750523e-02 -7.54539674e-03 1.69296543e-03 -1.62910694e-04 5.79152721e-06);
+        }
+        H2O-C2H5
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (1.03608681e-02 -6.37953610e-03 1.44451859e-03 -1.39995761e-04 5.00884118e-06);
+        }
+        H2O-C2H6
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (1.02942000e-02 -6.33848629e-03 1.43522368e-03 -1.39094943e-04 4.97661125e-06);
+        }
+        H2O-N2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (4.54607245e-03 -3.26669246e-03 8.38522715e-04 -8.77742182e-05 3.34097744e-06);
+        }
+        H2O-AR
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (6.12514514e-03 -4.18665503e-03 1.03544778e-03 -1.06221701e-04 3.98239277e-06);
+        }
+        HO2-HO2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.05398237e-03 1.59323228e-03 -2.82495993e-04 2.31111881e-05 -6.91078381e-07);
+        }
+        HO2-CH2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.46811627e-03 1.74007943e-03 -2.94329744e-04 2.29065888e-05 -6.43920266e-07);
+        }
+        HO2-CH2(S)
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.46811627e-03 1.74007943e-03 -2.94329744e-04 2.29065888e-05 -6.43920266e-07);
+        }
+        HO2-CH3
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.38554827e-03 1.69865208e-03 -2.87322419e-04 2.23612347e-05 -6.28589981e-07);
+        }
+        HO2-CH4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.37068510e-03 1.69589872e-03 -2.87878307e-04 2.24927819e-05 -6.35557739e-07);
+        }
+        HO2-CO
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-2.99105723e-03 1.57491196e-03 -2.81658498e-04 2.32536972e-05 -7.02311485e-07);
+        }
+        HO2-CO2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.68565224e-03 6.99762637e-04 -8.06695089e-05 3.17144970e-06 2.95978304e-08);
+        }
+        HO2-HCO
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (1.15767204e-03 -1.07331959e-03 3.20214583e-04 -3.59529544e-05 1.43684527e-06);
+        }
+        HO2-CH2O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (1.14728470e-03 -1.06368911e-03 3.17341421e-04 -3.56303625e-05 1.42395302e-06);
+        }
+        HO2-CH3O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (1.67197063e-04 -4.69148578e-04 1.85729517e-04 -2.29846274e-05 9.74813988e-07);
+        }
+        HO2-C2H4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.38101633e-03 4.88670304e-04 -2.89410381e-05 -2.14310043e-06 2.28660232e-07);
+        }
+        HO2-C2H5
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.54453181e-03 6.25728013e-04 -6.72220447e-05 2.05487262e-06 6.36543321e-08);
+        }
+        HO2-C2H6
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.53070355e-03 6.20125843e-04 -6.66202027e-05 2.03647525e-06 6.30844321e-08);
+        }
+        HO2-N2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.00908609e-03 1.58508264e-03 -2.83527416e-04 2.34134778e-05 -7.07257700e-07);
+        }
+        HO2-AR
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-2.95101931e-03 1.49279783e-03 -2.55164003e-04 2.00887261e-05 -5.73259268e-07);
+        }
+        CH2-CH2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.22288980e-03 1.50773445e-03 -2.27861891e-04 1.54606198e-05 -3.48123600e-07);
+        }
+        CH2-CH2(S)
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.22288980e-03 1.50773445e-03 -2.27861891e-04 1.54606198e-05 -3.48123600e-07);
+        }
+        CH2-CH3
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.16841084e-03 1.48224807e-03 -2.24010169e-04 1.51992772e-05 -3.42239003e-07);
+        }
+        CH2-CH4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.22826734e-03 1.52146643e-03 -2.33166265e-04 1.61201732e-05 -3.76221899e-07);
+        }
+        CH2-CO
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.45661434e-03 1.76015729e-03 -3.03689830e-04 2.41470781e-05 -6.98046077e-07);
+        }
+        CH2-CO2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-9.36753624e-04 1.61839929e-04 5.56403357e-05 -1.10727721e-05 5.70567718e-07);
+        }
+        CH2-HCO
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (3.76034497e-03 -2.65332664e-03 6.72174725e-04 -6.98741823e-05 2.64603427e-06);
+        }
+        CH2-CH2O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (3.73971990e-03 -2.63877344e-03 6.68487921e-04 -6.94909302e-05 2.63152107e-06);
+        }
+        CH2-CH3O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (2.21405674e-03 -1.73904337e-03 4.73810654e-04 -5.11065084e-05 1.98787987e-06);
+        }
+        CH2-C2H4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.44528119e-04 -2.01997885e-04 1.36467700e-04 -1.88652430e-05 8.47587799e-07);
+        }
+        CH2-C2H5
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-7.35311374e-04 7.00831528e-05 6.89325872e-05 -1.19145955e-05 5.86891728e-07);
+        }
+        CH2-C2H6
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-7.31288314e-04 6.96997115e-05 6.85554410e-05 -1.18494080e-05 5.83680706e-07);
+        }
+        CH2-N2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.49520089e-03 1.78184294e-03 -3.07955905e-04 2.45296405e-05 -7.10746276e-07);
+        }
+        CH2-AR
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.17026826e-03 1.51241033e-03 -2.36917067e-04 1.68495675e-05 -4.13569307e-07);
+        }
+        CH2(S)-CH2(S)
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.22288980e-03 1.50773445e-03 -2.27861891e-04 1.54606198e-05 -3.48123600e-07);
+        }
+        CH2(S)-CH3
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.16841084e-03 1.48224807e-03 -2.24010169e-04 1.51992772e-05 -3.42239003e-07);
+        }
+        CH2(S)-CH4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.22826734e-03 1.52146643e-03 -2.33166265e-04 1.61201732e-05 -3.76221899e-07);
+        }
+        CH2(S)-CO
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.45661434e-03 1.76015729e-03 -3.03689830e-04 2.41470781e-05 -6.98046077e-07);
+        }
+        CH2(S)-CO2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-9.36753624e-04 1.61839929e-04 5.56403357e-05 -1.10727721e-05 5.70567718e-07);
+        }
+        CH2(S)-HCO
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (3.76034497e-03 -2.65332664e-03 6.72174725e-04 -6.98741823e-05 2.64603427e-06);
+        }
+        CH2(S)-CH2O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (3.73971990e-03 -2.63877344e-03 6.68487921e-04 -6.94909302e-05 2.63152107e-06);
+        }
+        CH2(S)-CH3O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (2.21405674e-03 -1.73904337e-03 4.73810654e-04 -5.11065084e-05 1.98787987e-06);
+        }
+        CH2(S)-C2H4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.44528119e-04 -2.01997885e-04 1.36467700e-04 -1.88652430e-05 8.47587799e-07);
+        }
+        CH2(S)-C2H5
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-7.35311374e-04 7.00831528e-05 6.89325872e-05 -1.19145955e-05 5.86891728e-07);
+        }
+        CH2(S)-C2H6
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-7.31288314e-04 6.96997115e-05 6.85554410e-05 -1.18494080e-05 5.83680706e-07);
+        }
+        CH2(S)-N2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.49520089e-03 1.78184294e-03 -3.07955905e-04 2.45296405e-05 -7.10746276e-07);
+        }
+        CH2(S)-AR
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.17026826e-03 1.51241033e-03 -2.36917067e-04 1.68495675e-05 -4.13569307e-07);
+        }
+        CH3-CH3
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.11297862e-03 1.45631573e-03 -2.20091049e-04 1.49333617e-05 -3.36251437e-07);
+        }
+        CH3-CH4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.17000532e-03 1.49400783e-03 -2.28958207e-04 1.58292451e-05 -3.69432051e-07);
+        }
+        CH3-CO
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.37852478e-03 1.72039297e-03 -2.96829069e-04 2.36015631e-05 -6.82276278e-07);
+        }
+        CH3-CO2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-9.12630994e-04 1.57672339e-04 5.42075243e-05 -1.07876338e-05 5.55874854e-07);
+        }
+        CH3-HCO
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (3.67438584e-03 -2.59267326e-03 6.56809232e-04 -6.82769024e-05 2.58554759e-06);
+        }
+        CH3-CH2O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (3.65327551e-03 -2.57777766e-03 6.53035687e-04 -6.78846332e-05 2.57069292e-06);
+        }
+        CH3-CH3O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (2.16233715e-03 -1.69841992e-03 4.62742601e-04 -4.99126782e-05 1.94144368e-06);
+        }
+        CH3-C2H4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.36740643e-04 -1.97432064e-04 1.33383078e-04 -1.84388261e-05 8.28429510e-07);
+        }
+        CH3-C2H5
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-7.18494223e-04 6.84802958e-05 6.73560446e-05 -1.16420993e-05 5.73469051e-07);
+        }
+        CH3-C2H6
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-7.14376463e-04 6.80878286e-05 6.69700206e-05 -1.15753773e-05 5.70182444e-07);
+        }
+        CH3-N2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.41623580e-03 1.74158678e-03 -3.00998432e-04 2.39754563e-05 -6.94688789e-07);
+        }
+        CH3-AR
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.09061166e-03 1.47440929e-03 -2.30964256e-04 1.64262029e-05 -4.03177907e-07);
+        }
+        CH4-CH4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.21826600e-03 1.52667066e-03 -2.36760709e-04 1.66244591e-05 -3.99056001e-07);
+        }
+        CH4-CO
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.38865769e-03 1.73136286e-03 -3.00193288e-04 2.39905569e-05 -6.98096157e-07);
+        }
+        CH4-CO2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-9.92251734e-04 2.09674376e-04 4.19098271e-05 -9.55196433e-06 5.10298547e-07);
+        }
+        CH4-HCO
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (3.48781982e-03 -2.48190255e-03 6.32628159e-04 -6.59789424e-05 2.50460242e-06);
+        }
+        CH4-CH2O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (3.46691361e-03 -2.46702587e-03 6.28836146e-04 -6.55834604e-05 2.48958967e-06);
+        }
+        CH4-CH3O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (2.64793301e-03 -1.98091168e-03 5.22929589e-04 -5.55368969e-05 2.13645285e-06);
+        }
+        CH4-C2H4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-4.08627503e-04 -1.51215500e-04 1.22666086e-04 -1.73796002e-05 7.89997774e-07);
+        }
+        CH4-C2H5
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-7.81298537e-04 1.09667650e-04 5.76348187e-05 -1.06681755e-05 5.37698292e-07);
+        }
+        CH4-C2H6
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-7.76626833e-04 1.09011902e-04 5.72901965e-05 -1.06043861e-05 5.34483173e-07);
+        }
+        CH4-N2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.42438691e-03 1.75138358e-03 -3.04102643e-04 2.43389599e-05 -7.09574988e-07);
+        }
+        CH4-AR
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.11204246e-03 1.49310331e-03 -2.36225133e-04 1.70091853e-05 -4.26247502e-07);
+        }
+        CO-CO
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-2.87962062e-03 1.52750077e-03 -2.74435792e-04 2.27776125e-05 -6.91293379e-07);
+        }
+        CO-CO2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.85105435e-03 8.09429308e-04 -1.06231862e-04 5.72591935e-06 -6.37306800e-08);
+        }
+        CO-HCO
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (6.44704820e-04 -7.64588373e-04 2.52400548e-04 -2.94721870e-05 1.20774182e-06);
+        }
+        CO-CH2O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (6.39367536e-04 -7.58258615e-04 2.50311012e-04 -2.92281972e-05 1.19774335e-06);
+        }
+        CO-CH3O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (1.15037775e-04 -4.36403784e-04 1.78221708e-04 -2.22453631e-05 9.47977060e-07);
+        }
+        CO-C2H4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.62967859e-03 6.48854391e-04 -6.59071534e-05 1.52573926e-06 9.49289864e-08);
+        }
+        CO-C2H5
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.70620402e-03 7.33496363e-04 -9.25278951e-05 4.59249410e-06 -2.93519122e-08);
+        }
+        CO-C2H6
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.69211063e-03 7.27437621e-04 -9.17636068e-05 4.55455971e-06 -2.91094629e-08);
+        }
+        CO-N2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-2.90165486e-03 1.54011138e-03 -2.76862179e-04 2.29928532e-05 -6.98290096e-07);
+        }
+        CO-AR
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.02242263e-03 1.55212444e-03 -2.70913150e-04 2.17991813e-05 -6.39742782e-07);
+        }
+        CO2-CO2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (1.40811799e-03 -1.11508390e-03 3.05343714e-04 -3.30136856e-05 1.28626083e-06);
+        }
+        CO2-HCO
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (6.30021472e-03 -3.95153676e-03 9.09897393e-04 -8.92753800e-05 3.22875092e-06);
+        }
+        CO2-CH2O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (6.23615871e-03 -3.91136040e-03 9.00646217e-04 -8.83676928e-05 3.19592333e-06);
+        }
+        CO2-CH3O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (5.35657559e-03 -3.41041541e-03 7.95746359e-04 -7.87861533e-05 2.87136163e-06);
+        }
+        CO2-C2H4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (2.26589049e-03 -1.63513272e-03 4.20985722e-04 -4.41367862e-05 1.68192524e-06);
+        }
+        CO2-C2H5
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (1.54537798e-03 -1.18811999e-03 3.19361789e-04 -3.42240039e-05 1.32512318e-06);
+        }
+        CO2-C2H6
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (1.52969830e-03 -1.17606512e-03 3.16121488e-04 -3.38767612e-05 1.31167825e-06);
+        }
+        CO2-N2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.87358929e-03 8.21281633e-04 -1.08364861e-04 5.90181593e-06 -6.90332686e-08);
+        }
+        CO2-AR
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-9.57386743e-04 2.51951409e-04 1.84082055e-05 -6.40232192e-06 3.70866884e-07);
+        }
+        HCO-HCO
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (1.06601329e-02 -6.28698035e-03 1.36552999e-03 -1.27706608e-04 4.41879525e-06);
+        }
+        HCO-CH2O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (1.05702867e-02 -6.23399214e-03 1.35402097e-03 -1.26630266e-04 4.38155256e-06);
+        }
+        HCO-CH3O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (9.76931786e-03 -5.83622197e-03 1.28404777e-03 -1.21536910e-04 4.25473605e-06);
+        }
+        HCO-C2H4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (7.45314403e-03 -4.60368980e-03 1.04546082e-03 -1.01546364e-04 3.64037390e-06);
+        }
+        HCO-C2H5
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (6.19587745e-03 -3.87078322e-03 8.88152875e-04 -8.69230641e-05 3.13687004e-06);
+        }
+        HCO-C2H6
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (6.14377349e-03 -3.83823204e-03 8.80683992e-04 -8.61920884e-05 3.11049067e-06);
+        }
+        HCO-N2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (6.18890163e-04 -7.52350791e-04 2.50456666e-04 -2.93336118e-05 1.20431111e-06);
+        }
+        HCO-AR
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (2.79650995e-03 -2.02674581e-03 5.23397587e-04 -5.49602710e-05 2.09679126e-06);
+        }
+        CH2O-CH2O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (1.04796702e-02 -6.18054967e-03 1.34241328e-03 -1.25544696e-04 4.34399059e-06);
+        }
+        CH2O-CH3O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (9.68420336e-03 -5.78537428e-03 1.27286059e-03 -1.20478028e-04 4.21766695e-06);
+        }
+        CH2O-C2H4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (7.39139258e-03 -4.56554690e-03 1.03679887e-03 -1.00705023e-04 3.61021236e-06);
+        }
+        CH2O-C2H5
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (6.14361735e-03 -3.83813449e-03 8.80661611e-04 -8.61898979e-05 3.11041162e-06);
+        }
+        CH2O-C2H6
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (6.09106637e-03 -3.80530404e-03 8.73128649e-04 -8.54526508e-05 3.08380593e-06);
+        }
+        CH2O-N2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (6.13766215e-04 -7.46121889e-04 2.48383072e-04 -2.90907514e-05 1.19434031e-06);
+        }
+        CH2O-AR
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (2.76918587e-03 -2.00694293e-03 5.18283586e-04 -5.44232665e-05 2.07630398e-06);
+        }
+        CH3O-CH3O
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (8.73351806e-03 -5.20488710e-03 1.14206642e-03 -1.07630637e-04 3.75107546e-06);
+        }
+        CH3O-C2H4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (6.09406183e-03 -3.83990615e-03 8.87833602e-04 -8.73622722e-05 3.16738814e-06);
+        }
+        CH3O-C2H5
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (4.91987556e-03 -3.14689824e-03 7.37213621e-04 -7.31861232e-05 2.67322159e-06);
+        }
+        CH3O-C2H6
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (4.87710596e-03 -3.11954154e-03 7.30804854e-04 -7.25498995e-05 2.64998266e-06);
+        }
+        CH3O-N2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (4.91612596e-05 -3.99930014e-04 1.70913319e-04 -2.15891559e-05 9.26057698e-07);
+        }
+        CH3O-AR
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (1.50880388e-03 -1.25863566e-03 3.55355425e-04 -3.89633607e-05 1.53275182e-06);
+        }
+        C2H4-C2H4
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (3.27642608e-03 -2.23308220e-03 5.51058384e-04 -5.64591619e-05 2.11468042e-06);
+        }
+        C2H4-C2H5
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (2.36923336e-03 -1.68109096e-03 4.27612170e-04 -4.45478498e-05 1.68968094e-06);
+        }
+        C2H4-C2H6
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (2.34964759e-03 -1.66719386e-03 4.24077222e-04 -4.41795855e-05 1.67571283e-06);
+        }
+        C2H4-N2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.66082967e-03 6.65482122e-04 -6.90338572e-05 1.79380479e-06 8.64167053e-08);
+        }
+        C2H4-AR
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-4.89666172e-04 -5.39910729e-05 9.05554318e-05 -1.36297062e-05 6.36421185e-07);
+        }
+        C2H5-C2H5
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (1.64284844e-03 -1.23449306e-03 3.26867429e-04 -3.47674381e-05 1.33895714e-06);
+        }
+        C2H5-C2H6
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (1.62902246e-03 -1.22410374e-03 3.24116559e-04 -3.44748403e-05 1.32768866e-06);
+        }
+        C2H5-N2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.72911230e-03 7.45723320e-04 -9.47929157e-05 4.78433551e-06 -3.53368889e-08);
+        }
+        C2H5-AR
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-8.08980348e-04 1.73342790e-04 3.31064231e-05 -7.65207772e-06 4.10194308e-07);
+        }
+        C2H6-C2H6
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (1.61507813e-03 -1.21362548e-03 3.21342141e-04 -3.41797377e-05 1.31632373e-06);
+        }
+        C2H6-N2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-1.71482865e-03 7.39563132e-04 -9.40098610e-05 4.74481361e-06 -3.50449819e-08);
+        }
+        C2H6-AR
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-8.01092661e-04 1.71652671e-04 3.27836302e-05 -7.57746875e-06 4.06194848e-07);
+        }
+        N2-N2
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-2.92372203e-03 1.55274063e-03 -2.79289063e-04 2.32079334e-05 -7.05272056e-07);
+        }
+        N2-AR
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-3.04827899e-03 1.56643610e-03 -2.73609651e-04 2.20327662e-05 -6.47169081e-07);
+        }
+        AR-AR
+        {
+            type   binaryDiffusionCoefficient;
+            coeffs (-2.73042208e-03 1.32333688e-03 -2.12981375e-04 1.56570281e-05 -4.05670899e-07);
+        }
+    }
+}
+
+// ************************************************************************* //
