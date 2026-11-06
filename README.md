@@ -25,6 +25,18 @@ The program also computes pure-species dynamic viscosity data using Cantera and 
 
 ---
 
+## Theory and Implementation
+
+For a more detailed explanation of the physical principles and numerical methods behind this converter, see the companion blog post:
+
+**[Chemkin to OpenFOAM — Conversion Principles and Transport Models](https://stone1fan.com/posts/chemkin2foam/)**
+
+The discussion covers the Chemkin-to-Cantera-to-OpenFOAM conversion workflow, NASA polynomial thermodynamics, chemical reaction kinetics (including pressure-dependent reactions), fitting Sutherland viscosity parameters from Cantera data, and the diffusion-coefficient formulations used by the Fickian and Maxwell–Stefan transport models.
+
+This README focuses on installation, usage, and configuration; the article provides the theoretical background and implementation details.
+
+---
+
 ## Features
 
 - Interactive command-line interface
